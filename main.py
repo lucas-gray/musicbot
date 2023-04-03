@@ -13,10 +13,14 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
+    if message.content.startswith("/play that new youngboy"):
+        await message.channel.send("Who?")
     if message.content.startswith("/play"):
         await message.channel.send("Hell no, that shit is trash.")
     if message.content.startswith("fuck you"):
         await message.channel.send("fuck you!")
+    if message.content.startswith("does it"):
+        await message.channel.send("uh YEAH it does")
 
 def read_token(filename):
     file = open(filename, "r")
