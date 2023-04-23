@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
-import youtube_dl
+import yt_dlp
 
-class music(commands.Cog):
+class Music(commands.Cog):
     def __init__(self, client):
         self.client = client
 
@@ -26,10 +26,10 @@ class music(commands.Cog):
         FFMPEG_OPTIONS = {"before_options": "-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5", "options": "-vn"}
         YDL_OPTIONS = {"format": "bestaudio"}
         vc = ctx.voice_client
-        with youtube_dl.YoutubeDL(YDL_OPTIONS) as ydl:
+        with yt_dlp.YoutubeDL(YDL_OPTIONS) as ydl:
             info = ydl.extract_info(url, download=False)
             url2 = info["formats"][0]["url"]
-            source = await discord.FFmpegOpusAudio.from_probe(url2, **FFMPEG_OPTIONS)
+            source = await discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS)
             vc.play(source)
 
     @commands.command()
@@ -40,6 +40,6 @@ class music(commands.Cog):
     async def resume(self, ctx):
         await ctx.voice_client.resume()
 
-def setup(client):
-    client.add_cog(music(client))
+async def setup(client):
+    await client.add_cog(Music(client))
 

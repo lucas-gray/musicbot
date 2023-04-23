@@ -1,16 +1,13 @@
 import discord
 from discord.ext import commands
+import asyncio
 import music
 
+client = commands.Bot(command_prefix='!', intents=discord.Intents.all())
 
 @client.event
 async def on_ready():
     print(f"We have logged in as {client.user}")
-
-@client.event
-async def on_message(message):
-    if message.author == client.user:
-        return
 
 def read_token(filename):
     file = open(filename, "r")
@@ -18,15 +15,9 @@ def read_token(filename):
     file.close()
     return token
 
-def main():
-    cogs = [music]
-    intents = discord.Intents.default()
-    intents.message_content = True
-    client = discord.Bot(command_prefix='!', intents=intents)
-    for i in range(len(cogs)):
-        cogs[i].setup(client)
-    filename = "token.txt"
-    client.run(read_token(filename))
+async def main():
+    await music.setup(client)
+    async with client:
+        await client.start(read_token("token.txt"))
 
-if __name__ == "__main__":
-    main()
+asyncio.run(main())
