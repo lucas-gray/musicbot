@@ -1,9 +1,7 @@
 import discord
+from discord.ext import commands
+import music
 
-intents = discord.Intents.default()
-intents.message_content = True
-
-client = discord.Client(intents=intents)
 
 @client.event
 async def on_ready():
@@ -13,14 +11,6 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-    if message.content.startswith("/play that new youngboy"):
-        await message.channel.send("Who?")
-    if message.content.startswith("/play"):
-        await message.channel.send("Hell no, that shit is trash.")
-    if message.content.startswith("fuck you"):
-        await message.channel.send("fuck you!")
-    if message.content.startswith("does it"):
-        await message.channel.send("uh YEAH it does")
 
 def read_token(filename):
     file = open(filename, "r")
@@ -29,6 +19,12 @@ def read_token(filename):
     return token
 
 def main():
+    cogs = [music]
+    intents = discord.Intents.default()
+    intents.message_content = True
+    client = discord.Bot(command_prefix='!', intents=intents)
+    for i in range(len(cogs)):
+        cogs[i].setup(client)
     filename = "token.txt"
     client.run(read_token(filename))
 
